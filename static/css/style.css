@@ -1,0 +1,429 @@
+/* ============================================
+   FIREGUARD AI - STYLESHEET
+   Theme: Dark Industrial / Emergency System
+============================================ */
+
+:root {
+  --fire: #ff4500;
+  --fire-bright: #ff6a00;
+  --safe: #00e676;
+  --bg: #0a0a0f;
+  --card-bg: #111118;
+  --border: #2a2a3a;
+  --text: #e0e0f0;
+  --text-muted: #888899;
+  --font-display: 'Orbitron', monospace;
+  --font-body: 'Rajdhani', sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 16px;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ---- Animated Background ---- */
+.bg-particles {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.particle {
+  position: absolute;
+  width: 2px; height: 2px;
+  border-radius: 50%;
+  background: var(--fire);
+  opacity: 0;
+  animation: float-up 8s infinite;
+}
+
+.particle:nth-child(1) { left: 10%; animation-delay: 0s;   width: 3px; height: 3px; }
+.particle:nth-child(2) { left: 25%; animation-delay: 1.5s; }
+.particle:nth-child(3) { left: 40%; animation-delay: 3s;   background: #ffa500; }
+.particle:nth-child(4) { left: 60%; animation-delay: 2s;   width: 4px; height: 4px; }
+.particle:nth-child(5) { left: 75%; animation-delay: 4s;   background: #ff6a00; }
+.particle:nth-child(6) { left: 90%; animation-delay: 1s;   }
+
+@keyframes float-up {
+  0%   { transform: translateY(100vh); opacity: 0; }
+  10%  { opacity: 0.8; }
+  90%  { opacity: 0.4; }
+  100% { transform: translateY(-10vh); opacity: 0; }
+}
+
+/* ---- Header ---- */
+header {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 48px 20px 24px;
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(180deg, rgba(255,69,0,0.08) 0%, transparent 100%);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-bottom: 10px;
+}
+
+.fire-icon {
+  font-size: 2.5rem;
+  animation: flicker 1.5s infinite alternate;
+}
+
+@keyframes flicker {
+  0%   { filter: drop-shadow(0 0 8px #ff4500); }
+  100% { filter: drop-shadow(0 0 20px #ff6a00) drop-shadow(0 0 40px #ffa500); }
+}
+
+header h1 {
+  font-family: var(--font-display);
+  font-size: 2.4rem;
+  font-weight: 900;
+  color: #fff;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+}
+
+header h1 span { color: var(--fire); }
+
+.tagline {
+  color: var(--text-muted);
+  font-size: 1rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+/* ---- Main ---- */
+main {
+  position: relative;
+  z-index: 1;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+/* ---- Mode Toggle ---- */
+.mode-toggle {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.mode-btn {
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  letter-spacing: 2px;
+  padding: 14px 28px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--card-bg);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.mode-btn.active,
+.mode-btn:hover {
+  border-color: var(--fire);
+  color: var(--fire);
+  background: rgba(255, 69, 0, 0.1);
+  box-shadow: 0 0 20px rgba(255, 69, 0, 0.2);
+}
+
+/* ---- Cards ---- */
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 36px;
+  transition: border-color 0.3s;
+}
+
+.card:hover { border-color: rgba(255,69,0,0.4); }
+
+.card h2 {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  letter-spacing: 2px;
+  color: var(--fire);
+  margin-bottom: 24px;
+  text-transform: uppercase;
+}
+
+/* ---- Drop Zone ---- */
+.drop-zone {
+  border: 2px dashed var(--border);
+  border-radius: 6px;
+  padding: 50px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: rgba(255,69,0,0.02);
+}
+
+.drop-zone:hover {
+  border-color: var(--fire);
+  background: rgba(255,69,0,0.06);
+  transform: translateY(-2px);
+}
+
+.drop-zone i {
+  font-size: 3rem;
+  color: var(--fire);
+  margin-bottom: 16px;
+  display: block;
+}
+
+.drop-zone p { font-size: 1.1rem; color: var(--text); }
+.drop-zone span { color: var(--text-muted); font-size: 0.85rem; }
+
+/* ---- Preview Box ---- */
+.preview-box {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.preview-box img {
+  max-width: 100%;
+  max-height: 320px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  object-fit: contain;
+}
+
+/* ---- Detect Button ---- */
+.detect-btn {
+  margin-top: 20px;
+  width: 100%;
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  letter-spacing: 3px;
+  padding: 18px;
+  border: none;
+  border-radius: 4px;
+  background: linear-gradient(135deg, #ff4500, #ff6a00);
+  color: #fff;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 20px rgba(255,69,0,0.3);
+}
+
+.detect-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(255,69,0,0.5);
+}
+
+/* ---- Camera ---- */
+.camera-container {
+  background: #000;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  min-height: 240px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+video {
+  width: 100%;
+  max-height: 360px;
+  display: block;
+}
+
+.camera-controls {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+.cam-btn {
+  flex: 1;
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  letter-spacing: 2px;
+  padding: 12px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: all 0.3s;
+}
+
+.cam-btn.start  { background: rgba(0,230,118,0.1);  color: var(--safe);  border-color: var(--safe); }
+.cam-btn.capture{ background: rgba(255,69,0,0.1);   color: var(--fire);  border-color: var(--fire); }
+.cam-btn.stop   { background: rgba(255,50,50,0.1);  color: #ff5050;      border-color: #ff5050; }
+
+.cam-btn:hover { transform: translateY(-2px); filter: brightness(1.3); }
+
+/* ---- Result Card ---- */
+.result-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 40px;
+  text-align: center;
+  animation: slide-in 0.5s ease;
+}
+
+@keyframes slide-in {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.result-icon { font-size: 5rem; margin-bottom: 16px; animation: pop 0.4s ease; }
+
+@keyframes pop {
+  0%   { transform: scale(0); }
+  70%  { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+.result-title {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 28px;
+}
+
+.result-title.fire { color: var(--fire); text-shadow: 0 0 20px rgba(255,69,0,0.5); }
+.result-title.safe { color: var(--safe); text-shadow: 0 0 20px rgba(0,230,118,0.4); }
+
+/* ---- Confidence Bar ---- */
+.confidence-bar-container { margin: 0 auto 24px; max-width: 500px; text-align: left; }
+
+.confidence-bar-container label {
+  display: block;
+  font-size: 0.8rem;
+  letter-spacing: 2px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.confidence-bar {
+  height: 8px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.confidence-fill {
+  height: 100%;
+  border-radius: 4px;
+  width: 0%;
+  transition: width 1s ease;
+}
+
+.confidence-fill.fire { background: linear-gradient(90deg, #ff4500, #ff6a00); box-shadow: 0 0 10px rgba(255,69,0,0.5); }
+.confidence-fill.safe { background: linear-gradient(90deg, #00c853, #00e676); box-shadow: 0 0 10px rgba(0,230,118,0.5); }
+
+.confidence-text {
+  display: block;
+  text-align: right;
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  margin-top: 8px;
+  color: var(--text);
+}
+
+.result-message {
+  color: var(--text-muted);
+  font-size: 1rem;
+  letter-spacing: 1px;
+  margin-top: 12px;
+}
+
+/* ---- Loader ---- */
+.loader {
+  text-align: center;
+  padding: 40px;
+}
+
+.spinner {
+  width: 60px; height: 60px;
+  border: 3px solid rgba(255,69,0,0.2);
+  border-top-color: var(--fire);
+  border-radius: 50%;
+  margin: 0 auto 20px;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.loader p {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+/* ---- Stop Alarm Button ---- */
+.stop-alarm-btn {
+  position: fixed;
+  bottom: 30px; right: 30px;
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  letter-spacing: 2px;
+  padding: 14px 22px;
+  background: #ff3030;
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+  cursor: pointer;
+  z-index: 999;
+  animation: pulse-red 1s infinite;
+  text-transform: uppercase;
+}
+
+@keyframes pulse-red {
+  0%, 100% { box-shadow: 0 0 10px rgba(255,48,48,0.5); }
+  50% { box-shadow: 0 0 30px rgba(255,48,48,0.9); }
+}
+
+/* ---- Footer ---- */
+footer {
+  position: relative; z-index: 1;
+  text-align: center;
+  padding: 30px;
+  border-top: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  letter-spacing: 1px;
+}
+
+/* ---- Fire Alert Flash ---- */
+body.fire-alert {
+  animation: flash-red 0.5s 4 alternate;
+}
+
+@keyframes flash-red {
+  from { background-color: var(--bg); }
+  to   { background-color: rgba(255,30,0,0.12); }
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 600px) {
+  header h1 { font-size: 1.5rem; }
+  .card { padding: 24px 18px; }
+  .result-card { padding: 28px 18px; }
+  .mode-btn { padding: 12px 16px; font-size: 0.7rem; }
+}
