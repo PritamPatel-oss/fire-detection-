@@ -4,25 +4,50 @@ from PIL import Image
 import io
 import base64
 import os
-import tensorflow as tf
+
+# Support lightweight TFLite runtime or full TensorFlow fallback
+try:
+    from tflite_runtime.interpreter import Interpreter
+except ImportError:
+    try:
+        from ai_edge_litert.interpreter import Interpreter
+    except ImportError:
+        import tensorflow as tf
+        Interpreter = tf.lite.Interpreter
 
 app = Flask(__name__)
 
-# Load model
-MODEL_PATH = "model/fire_model.h5"
-model = None
+# Model paths
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+TFLITE_PATH = os.path.join(BASE_DIR, "model", "fire_model.tflite")
+H5_PATH = os.path.join(BASE_DIR, "model", "fire_model.h5")
+
+interpreter = None
+input_details = None
+output_details = None
+h5_model = None
 
 def load_model():
-    global model
-    if os.path.exists(MODEL_PATH):
-        model = tf.keras.models.load_model(MODEL_PATH)
-        print("✅ Model loaded successfully!")
+    global interpreter, input_details, output_details, h5_model
+    if os.path.exists(TFLITE_PATH):
+        interpreter = Interpreter(model_path=TFLITE_PATH)
+        interpreter.allocate_tensors()
+        input_details = interpreter.get_input_details()
+        output_details = interpreter.get_output_details()
+        print("Model loaded successfully (TensorFlow Lite - Low Memory)!")
+    elif os.path.exists(H5_PATH):
+        import tensorflow as tf
+        h5_model = tf.keras.models.load_model(H5_PATH)
+        print("Model loaded successfully (H5 fallback)!")
     else:
-        print("⚠️ Model not found. Train the model first using model/train_model.py")
+        print("Warning: Model file not found.")
+
+# Load model on startup
+load_model()
 
 def preprocess_image(image):
     image = image.resize((64, 64))
-    image = np.array(image) / 255.0
+    image = np.array(image, dtype=np.float32) / 255.0
     if image.shape[-1] == 4:  # Remove alpha channel if present
         image = image[:, :, :3]
     image = np.expand_dims(image, axis=0)
@@ -35,8 +60,8 @@ def index():
 @app.route('/predict', methods=['POST'])
 def predict():
     try:
-        if model is None:
-            return jsonify({'error': 'Model not loaded. Please train the model first.'}), 500
+        if interpreter is None and h5_model is None:
+            return jsonify({'error': 'Model not loaded. Please train or provide model file.'}), 500
 
         data = request.get_json()
         image_data = data['image']
@@ -52,7 +77,12 @@ def predict():
         processed = preprocess_image(image)
 
         # Predict
-        prediction = model.predict(processed)[0][0]
+        if interpreter is not None:
+            interpreter.set_tensor(input_details[0]['index'], processed)
+            interpreter.invoke()
+            prediction = interpreter.get_tensor(output_details[0]['index'])[0][0]
+        else:
+            prediction = h5_model.predict(processed)[0][0]
 
         fire_detected = prediction < 0.5
         confidence = float(prediction) if fire_detected else float(1 - prediction)
@@ -68,5 +98,5 @@ def predict():
         return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
-    load_model()
-    app.run(debug=True)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port, debug=False)

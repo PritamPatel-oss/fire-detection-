@@ -1,5 +1,5 @@
 flask
-tensorflow
+gunicorn
 numpy
 pillow
-opencv-python
+ai-edge-litert
